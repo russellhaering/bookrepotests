@@ -22,3 +22,27 @@ class TestBookSearch(unittest.TestCase):
             handle = urlopen(self.url, data)
             text = handle.read()
             self.assertTrue(re.search("No results were found", text))
+
+        def testFullISBNHasResults(self):
+            data = urlencode({
+                'isbn': '1234567890123',
+            })
+            handle = urlopen(self.url, data)
+            text = handle.read()
+            self.assertTrue(re.search("Criminal", text))
+
+        def testPartialISBNHasResults(self):
+            data = urlencode({
+                'isbn': '12345',
+            })
+            handle = urlopen(self.url, data)
+            text = handle.read()
+            self.assertTrue(re.search("Criminal", text))
+
+        def testFullISBNHasNoResults(self):
+            data = urlencode({
+                'title': '3210987654321',
+            })
+            handle = urlopen(self.url, data)
+            text = handle.read()
+            self.assertTrue(re.search("No results were found", text))
